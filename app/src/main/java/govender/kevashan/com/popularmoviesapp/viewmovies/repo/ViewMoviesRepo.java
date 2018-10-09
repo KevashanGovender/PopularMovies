@@ -26,4 +26,14 @@ public class ViewMoviesRepo implements IViewMoviesRepo {
             return null;
         }
     }
+
+    @Override
+    public GetPopularMoviesResponse getTopRatedMovies(String key) {
+        try {
+            return service.getTopRatedMovies(key).execute().body();
+        } catch (IOException e) {
+            Log.e(TAG, e.getLocalizedMessage());
+            return null;
+        }
+    }
 }

@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -16,6 +19,7 @@ import govender.kevashan.com.popularmoviesapp.serivce.RetrofitClientInstance;
 import govender.kevashan.com.popularmoviesapp.viewmovies.adapter.MoviesAdapter;
 import govender.kevashan.com.popularmoviesapp.viewmovies.model.Movie;
 import govender.kevashan.com.popularmoviesapp.viewmovies.repo.ViewMoviesRepo;
+import govender.kevashan.com.popularmoviesapp.viewmovies.task.ViewMoviesTaskFactory;
 import govender.kevashan.com.popularmoviesapp.viewmovies.viewmodel.ViewMoviesViewModel;
 
 public class ViewMoviesActivity extends AppCompatActivity implements IViewMoviesView {
@@ -40,6 +44,27 @@ public class ViewMoviesActivity extends AppCompatActivity implements IViewMovies
         viewModel = new ViewMoviesViewModel(repo, key, this);
 
         viewModel.getPopularMovies();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.order_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.pop_movie:
+                viewModel.getPopularMovies();
+                return true;
+            case R.id.rated_movie:
+                viewModel.getTopRatedMovies();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

@@ -5,4 +5,5 @@ import govender.kevashan.com.popularmoviesapp.viewmovies.model.GetPopularMoviesR
 public interface IViewMoviesRepo {
 
     GetPopularMoviesResponse getPopularMovies(String key);
+    GetPopularMoviesResponse getTopRatedMovies(String key);
 }
