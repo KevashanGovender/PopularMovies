@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.io.IOException;
 
-import govender.kevashan.com.popularmoviesapp.serivce.MoviesService;
+import govender.kevashan.com.popularmoviesapp.viewmovies.service.MoviesService;
 import govender.kevashan.com.popularmoviesapp.viewmovies.model.GetPopularMoviesResponse;
 
 public class ViewMoviesRepo implements IViewMoviesRepo {

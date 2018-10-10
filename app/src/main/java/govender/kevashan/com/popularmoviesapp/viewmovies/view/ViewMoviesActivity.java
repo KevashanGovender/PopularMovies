@@ -14,12 +14,11 @@ import android.widget.Toast;
 import java.util.List;
 
 import govender.kevashan.com.popularmoviesapp.R;
-import govender.kevashan.com.popularmoviesapp.serivce.MoviesService;
+import govender.kevashan.com.popularmoviesapp.viewmovies.service.MoviesService;
 import govender.kevashan.com.popularmoviesapp.serivce.RetrofitClientInstance;
 import govender.kevashan.com.popularmoviesapp.viewmovies.adapter.MoviesAdapter;
 import govender.kevashan.com.popularmoviesapp.viewmovies.model.Movie;
 import govender.kevashan.com.popularmoviesapp.viewmovies.repo.ViewMoviesRepo;
-import govender.kevashan.com.popularmoviesapp.viewmovies.task.ViewMoviesTaskFactory;
 import govender.kevashan.com.popularmoviesapp.viewmovies.viewmodel.ViewMoviesViewModel;
 
 public class ViewMoviesActivity extends AppCompatActivity implements IViewMoviesView {

@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import govender.kevashan.com.popularmoviesapp.R;
+import govender.kevashan.com.popularmoviesapp.viewmoviedetails.MovieDetailsActivity;
 import govender.kevashan.com.popularmoviesapp.viewmovies.model.Movie;
 import govender.kevashan.com.popularmoviesapp.viewmovies.view.ViewMoviesActivity;
 
@@ -49,22 +50,22 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             Movie poster1 = movieList.get(posterIndexL);
             Picasso.with(context).load(BASE_IMAGE_URL + poster1.getPosterPath()).into(holder.poster1);
 
-//            holder.poster1.setOnClickListener(v -> {
-//                Intent intent = new Intent(context, ViewMoviesActivity.class);
-//                intent.putExtra("movie", poster1);
-//                context.startActivity(intent);
-//            });
+            holder.poster1.setOnClickListener(v -> {
+                Intent intent = new Intent(context, MovieDetailsActivity.class);
+                intent.putExtra("movie", poster1);
+                context.startActivity(intent);
+            });
         }
 
         if(posterIndexR < movieList.size()) {
             Movie poster2 = movieList.get(posterIndexR);
             Picasso.with(context).load(BASE_IMAGE_URL + poster2.getPosterPath()).into(holder.poster2);
 
-//            holder.poster2.setOnClickListener(v -> {
-//                Intent intent = new Intent(context, ViewMoviesActivity.class);
-//                intent.putExtra("movie", poster2);
-//                context.startActivity(intent);
-//            });
+            holder.poster2.setOnClickListener(v -> {
+                Intent intent = new Intent(context, MovieDetailsActivity.class);
+                intent.putExtra("movie", poster2);
+                context.startActivity(intent);
+            });
         }
     }
 
