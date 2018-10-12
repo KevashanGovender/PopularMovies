@@ -8,6 +8,8 @@
                 android:title="@string/popularity" />
             <item android:id="@+id/rated_movie"
                 android:title="@string/highest_rated" />
+            <item android:id="@+id/favorites"
+                android:title="@string/fav_movies" />
         </menu>
     </item>
 </menu>

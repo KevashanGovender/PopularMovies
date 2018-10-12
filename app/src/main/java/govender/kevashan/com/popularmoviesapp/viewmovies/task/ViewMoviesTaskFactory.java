@@ -22,4 +22,8 @@ public class ViewMoviesTaskFactory {
     public GetTopRatedMoviesTask getTopRatedMovieTask(){
         return new GetTopRatedMoviesTask(repo, key, view);
     }
+
+    public GetFavoriteMovieTask getFavoriteMovieTask(){
+        return new GetFavoriteMovieTask(repo, view);
+    }
 }

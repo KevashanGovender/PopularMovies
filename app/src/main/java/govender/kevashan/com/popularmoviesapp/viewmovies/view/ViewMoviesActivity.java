@@ -14,6 +14,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import govender.kevashan.com.popularmoviesapp.R;
+import govender.kevashan.com.popularmoviesapp.database.MovieDatabase;
 import govender.kevashan.com.popularmoviesapp.viewmovies.service.MoviesService;
 import govender.kevashan.com.popularmoviesapp.serivce.RetrofitClientInstance;
 import govender.kevashan.com.popularmoviesapp.viewmovies.adapter.MoviesAdapter;
@@ -35,7 +36,7 @@ public class ViewMoviesActivity extends AppCompatActivity implements IViewMovies
         progressBar = findViewById(R.id.progressBar);
 
         MoviesService moviesService = RetrofitClientInstance.getRetrofitInstance().create(MoviesService.class);
-        ViewMoviesRepo repo = new ViewMoviesRepo(moviesService);
+        ViewMoviesRepo repo = new ViewMoviesRepo(moviesService, MovieDatabase.getInstance(getApplicationContext()));
 
         String key = getString(R.string.the_movieDb_key);
 //        String key = "INSERT YOUR OWN KEY";
@@ -60,6 +61,9 @@ public class ViewMoviesActivity extends AppCompatActivity implements IViewMovies
                 return true;
             case R.id.rated_movie:
                 viewModel.getTopRatedMovies();
+                return true;
+            case R.id.favorites:
+                viewModel.getFavoriteMovies();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

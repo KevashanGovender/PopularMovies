@@ -1,13 +1,17 @@
 package govender.kevashan.com.popularmoviesapp.viewmovies.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@Entity(tableName = "movies_db")
 public class Movie implements Parcelable {
 
     @SerializedName("poster_path")
@@ -22,9 +26,11 @@ public class Movie implements Parcelable {
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
-    @SerializedName("genre_ids")
-    @Expose
-    private List<Integer> genreIds = null;
+//    @SerializedName("genre_ids")
+//    @Expose
+//    private List<Integer> genreIds = null;
+    @NonNull
+    @PrimaryKey
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -52,6 +58,9 @@ public class Movie implements Parcelable {
     @SerializedName("vote_average")
     @Expose
     private Double voteAverage;
+
+    public Movie() {
+    }
 
     protected Movie(Parcel in) {
         posterPath = in.readString();
@@ -173,13 +182,13 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
-    public List<Integer> getGenreIds() {
-        return genreIds;
-    }
-
-    public void setGenreIds(List<Integer> genreIds) {
-        this.genreIds = genreIds;
-    }
+//    public List<Integer> getGenreIds() {
+//        return genreIds;
+//    }
+//
+//    public void setGenreIds(List<Integer> genreIds) {
+//        this.genreIds = genreIds;
+//    }
 
     public Integer getId() {
         return id;

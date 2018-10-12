@@ -14,9 +14,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import govender.kevashan.com.popularmoviesapp.R;
-import govender.kevashan.com.popularmoviesapp.viewmoviedetails.MovieDetailsActivity;
+import govender.kevashan.com.popularmoviesapp.viewmoviedetails.view.MovieDetailsActivity;
 import govender.kevashan.com.popularmoviesapp.viewmovies.model.Movie;
-import govender.kevashan.com.popularmoviesapp.viewmovies.view.ViewMoviesActivity;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
 

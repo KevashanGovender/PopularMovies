@@ -26,6 +26,10 @@ public class ViewMoviesViewModel implements IViewMovies {
         taskFactory.getTopRatedMovieTask().execute();
     }
 
+    public void getFavoriteMovies(){
+        taskFactory.getFavoriteMovieTask().execute();
+    }
+
     @Override
     public void onStart() {
         view.showProgressLoader();
