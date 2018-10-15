@@ -1,26 +1,38 @@
 package govender.kevashan.com.popularmoviesapp.viewmoviedetails.view;
 
-import android.arch.persistence.room.Room;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import govender.kevashan.com.popularmoviesapp.R;
 import govender.kevashan.com.popularmoviesapp.database.MovieDatabase;
+import govender.kevashan.com.popularmoviesapp.serivce.MoviesService;
+import govender.kevashan.com.popularmoviesapp.serivce.RetrofitClientInstance;
+import govender.kevashan.com.popularmoviesapp.viewmoviedetails.ReviewAdapter;
+import govender.kevashan.com.popularmoviesapp.viewmoviedetails.models.Review;
 import govender.kevashan.com.popularmoviesapp.viewmoviedetails.repo.FavoriteMovieRepo;
-import govender.kevashan.com.popularmoviesapp.viewmoviedetails.viewmodel.FavoriteMovieViewModel;
+import govender.kevashan.com.popularmoviesapp.viewmoviedetails.repo.TrailerRepo;
+import govender.kevashan.com.popularmoviesapp.viewmoviedetails.viewmodel.MovieDetailsViewModel;
 import govender.kevashan.com.popularmoviesapp.viewmovies.model.Movie;
 
 public class MovieDetailsActivity extends AppCompatActivity implements IMovieDetailsView {
 
     private static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185//";
+
+    private TextView trailerBtn;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +45,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements IMovieDet
         TextView movieRating = findViewById(R.id.rating_tv);
         TextView movieOverview = findViewById(R.id.overview_tv);
         ImageView favBtn = findViewById(R.id.fav_movie_btn);
+        trailerBtn = findViewById(R.id.trailer_btn);
+        recyclerView = findViewById(R.id.review_rv);
 
         Intent recievedIntent = getIntent();
         Movie recievedMovie = recievedIntent.getParcelableExtra("movie");
@@ -48,9 +62,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements IMovieDet
 
         FavoriteMovieRepo repo = new FavoriteMovieRepo(database);
 
-        FavoriteMovieViewModel viewModel = new FavoriteMovieViewModel(repo, this);
+        MoviesService service = RetrofitClientInstance.getRetrofitInstance().create(MoviesService.class);
+        String key = getString(R.string.the_movieDb_key);
+//        String key = INSERT YOUR OWN KEY
+        TrailerRepo trailerRepo = new TrailerRepo(key, service);
+
+        MovieDetailsViewModel viewModel = new MovieDetailsViewModel(repo, this, trailerRepo);
 
         favBtn.setOnClickListener(view -> viewModel.checkMovie(recievedMovie));
+        viewModel.getMovieTrailer(recievedMovie.getId());
+        viewModel.getMovieReviews(recievedMovie.getId());
     }
 
     @Override
@@ -61,5 +82,28 @@ public class MovieDetailsActivity extends AppCompatActivity implements IMovieDet
     @Override
     public void showMovieRemoved() {
         Toast.makeText(this, "Movie has been removed from favorites", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showMovieTrailer(String key) {
+        trailerBtn.setOnClickListener(view -> {
+            Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + key));
+            Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://www.youtube.com/watch?v=" + key));
+            try {
+                startActivity(appIntent);
+            } catch (ActivityNotFoundException ex) {
+                startActivity(webIntent);
+            }
+        });
+    }
+
+    @Override
+    public void showReviews(List<Review> reviews) {
+        ReviewAdapter adapter = new ReviewAdapter(reviews);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
     }
 }

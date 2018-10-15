@@ -15,7 +15,7 @@ import java.util.List;
 
 import govender.kevashan.com.popularmoviesapp.R;
 import govender.kevashan.com.popularmoviesapp.database.MovieDatabase;
-import govender.kevashan.com.popularmoviesapp.viewmovies.service.MoviesService;
+import govender.kevashan.com.popularmoviesapp.serivce.MoviesService;
 import govender.kevashan.com.popularmoviesapp.serivce.RetrofitClientInstance;
 import govender.kevashan.com.popularmoviesapp.viewmovies.adapter.MoviesAdapter;
 import govender.kevashan.com.popularmoviesapp.viewmovies.model.Movie;

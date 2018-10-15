@@ -4,4 +4,5 @@
     <string name="popularity">Popularity</string>
     <string name="sort_order">Sort order</string>
     <string name="fav_movies">Favorites</string>
+    <string name="trailer_btn">PLAY</string>
 </resources>

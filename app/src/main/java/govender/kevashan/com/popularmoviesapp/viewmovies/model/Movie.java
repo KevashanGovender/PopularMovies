@@ -11,6 +11,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity(tableName = "movies_db")
 public class Movie implements Parcelable {
 
@@ -182,19 +185,12 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
-//    public List<Integer> getGenreIds() {
-//        return genreIds;
-//    }
-//
-//    public void setGenreIds(List<Integer> genreIds) {
-//        this.genreIds = genreIds;
-//    }
-
+    @NonNull
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(@NonNull Integer id) {
         this.id = id;
     }
 

@@ -1,28 +1,31 @@
 package govender.kevashan.com.popularmoviesapp.viewmoviedetails.viewmodel;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.concurrent.ExecutionException;
 
+import govender.kevashan.com.popularmoviesapp.viewmoviedetails.models.GetReviewsResponse;
 import govender.kevashan.com.popularmoviesapp.viewmoviedetails.repo.IFavoriteMovieRepo;
-import govender.kevashan.com.popularmoviesapp.viewmoviedetails.task.FavoriteMovieTaskFactory;
+import govender.kevashan.com.popularmoviesapp.viewmoviedetails.repo.ITrailerRepo;
+import govender.kevashan.com.popularmoviesapp.viewmoviedetails.task.MovieDetailsTaskFactory;
 import govender.kevashan.com.popularmoviesapp.viewmoviedetails.view.IMovieDetailsView;
 import govender.kevashan.com.popularmoviesapp.viewmovies.model.Movie;
 
-public class FavoriteMovieViewModel implements IFavoriteMovie {
+public class MovieDetailsViewModel implements IFavoriteMovie, ITrailer {
 
-    private static final String TAG = FavoriteMovieViewModel.class.getSimpleName();
+    private static final String TAG = MovieDetailsViewModel.class.getSimpleName();
 
     private IFavoriteMovieRepo repo;
-    private FavoriteMovieTaskFactory taskFactory;
+    private MovieDetailsTaskFactory taskFactory;
     private IMovieDetailsView view;
+    private ITrailerRepo trailerRepo;
 
-    public FavoriteMovieViewModel(IFavoriteMovieRepo repo, IMovieDetailsView view) {
+    public MovieDetailsViewModel(IFavoriteMovieRepo repo, IMovieDetailsView view, ITrailerRepo trailerRepo) {
         this.repo = repo;
         this.view = view;
+        this.trailerRepo = trailerRepo;
 
-        taskFactory = new FavoriteMovieTaskFactory();
+        taskFactory = new MovieDetailsTaskFactory();
     }
 
     private void favoriteMovie(Movie movie){
@@ -47,6 +50,14 @@ public class FavoriteMovieViewModel implements IFavoriteMovie {
         }
     }
 
+    public void getMovieTrailer(int id){
+        taskFactory.getTrailerTask(trailerRepo, this, id).execute();
+    }
+
+    public void getMovieReviews(int id){
+        taskFactory.getMovieReviewsTask(trailerRepo, this, id).execute();
+    }
+
     @Override
     public void onMovieFavorite() {
         view.showMovieFavorited();
@@ -55,5 +66,15 @@ public class FavoriteMovieViewModel implements IFavoriteMovie {
     @Override
     public void onMovieDelete() {
         view.showMovieRemoved();
+    }
+
+    @Override
+    public void showTrailer(String key) {
+        view.showMovieTrailer(key);
+    }
+
+    @Override
+    public void showReviews(GetReviewsResponse getReviewsResponse) {
+        view.showReviews(getReviewsResponse.getResults());
     }
 }
