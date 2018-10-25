@@ -1,5 +1,6 @@
 package govender.kevashan.com.popularmoviesapp.viewmovies.repo;
 
+import android.arch.lifecycle.LiveData;
 import android.util.Log;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class ViewMoviesRepo implements IViewMoviesRepo {
         }
     }
 
-    public List<Movie> getFavoriteMovies(){
+    public LiveData<List<Movie>> getFavoriteMovies(){
         return database.daoAccess().getFavorites();
     }
 }

@@ -1,5 +1,6 @@
 package govender.kevashan.com.popularmoviesapp.database;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -16,7 +17,7 @@ public interface DaoAccess {
     void insertMovie(Movie movie);
 
     @Query("SELECT * FROM movies_db")
-    List<Movie> getFavorites();
+    LiveData<List<Movie>> getFavorites();
 
     @Query("SELECT * FROM movies_db WHERE id=:id ")
     Movie isMovieAFavorite(int id);

@@ -6,9 +6,10 @@ import java.util.List;
 
 import govender.kevashan.com.popularmoviesapp.viewmovies.model.Movie;
 
-public interface IViewMovies {
+public interface IFavoriteMovies {
+
     void onStart();
     void onFinish();
-    void onSuccess(List<Movie> movies);
+    void onSuccess(LiveData<List<Movie>> movies);
     void onError();
 }

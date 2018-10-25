@@ -76,6 +76,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         return i + s;
     }
 
+    public void setMovies(List<Movie> favMovies){
+        movieList = favMovies;
+        notifyDataSetChanged();
+    }
+
     class MoviesViewHolder extends RecyclerView.ViewHolder{
 
         ImageView poster1, poster2;

@@ -1,6 +1,11 @@
 package govender.kevashan.com.popularmoviesapp.viewmovies.view;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,13 +25,16 @@ import govender.kevashan.com.popularmoviesapp.serivce.RetrofitClientInstance;
 import govender.kevashan.com.popularmoviesapp.viewmovies.adapter.MoviesAdapter;
 import govender.kevashan.com.popularmoviesapp.viewmovies.model.Movie;
 import govender.kevashan.com.popularmoviesapp.viewmovies.repo.ViewMoviesRepo;
+import govender.kevashan.com.popularmoviesapp.viewmovies.viewmodel.FavoriteMoviesModel;
 import govender.kevashan.com.popularmoviesapp.viewmovies.viewmodel.ViewMoviesViewModel;
 
-public class ViewMoviesActivity extends AppCompatActivity implements IViewMoviesView {
+public class ViewMoviesActivity extends AppCompatActivity implements IViewMoviesView, IFavoriteMovieView {
 
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private ViewMoviesViewModel viewModel;
+    private ViewMoviesViewModel viewMoviesViewModel;
+    private FavoriteMoviesModel favoriteMoviesModel;
+    private MoviesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +49,16 @@ public class ViewMoviesActivity extends AppCompatActivity implements IViewMovies
         String key = getString(R.string.the_movieDb_key);
 //        String key = "INSERT YOUR OWN KEY";
 
-        viewModel = new ViewMoviesViewModel(repo, key, this);
+        viewMoviesViewModel = new ViewMoviesViewModel();
+        viewMoviesViewModel.init(repo, key, this);
 
-        viewModel.getPopularMovies();
+        viewMoviesViewModel.getPopularMovies();
+
+        favoriteMoviesModel = ViewModelProviders.of(this).get(FavoriteMoviesModel.class);
+        favoriteMoviesModel.init(repo, key, this);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -57,13 +72,13 @@ public class ViewMoviesActivity extends AppCompatActivity implements IViewMovies
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.pop_movie:
-                viewModel.getPopularMovies();
+                viewMoviesViewModel.getPopularMovies();
                 return true;
             case R.id.rated_movie:
-                viewModel.getTopRatedMovies();
+                viewMoviesViewModel.getTopRatedMovies();
                 return true;
             case R.id.favorites:
-                viewModel.getFavoriteMovies();
+                favoriteMoviesModel.getFavoriteMovies();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -82,15 +97,32 @@ public class ViewMoviesActivity extends AppCompatActivity implements IViewMovies
 
     @Override
     public void showMovies(List<Movie> movies) {
-        MoviesAdapter adapter = new MoviesAdapter(movies, this);
+        adapter = new MoviesAdapter(movies, this);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void showError() {
         Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showFavoriteMoviesLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideFavoriteMoviesLoading() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showFavoriteMovies() {
+        favoriteMoviesModel.getMovies().observe(this, movies -> {
+            adapter = new MoviesAdapter(movies, getApplicationContext());
+
+            recyclerView.setAdapter(adapter);
+        });
     }
 }
