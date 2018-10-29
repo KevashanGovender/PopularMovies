@@ -27,7 +27,7 @@ public class GetTrailerTask extends AsyncTask<Void, Void, GetTrailerResponse> {
     protected void onPostExecute(GetTrailerResponse getTrailerResponse) {
         super.onPostExecute(getTrailerResponse);
         if(getTrailerResponse != null){
-            view.showTrailer(getTrailerResponse.getResults().get(0).getKey());
+            view.showTrailer(getTrailerResponse);
         }
     }
 }

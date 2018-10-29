@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.concurrent.ExecutionException;
 
 import govender.kevashan.com.popularmoviesapp.viewmoviedetails.models.GetReviewsResponse;
+import govender.kevashan.com.popularmoviesapp.viewmoviedetails.models.GetTrailerResponse;
 import govender.kevashan.com.popularmoviesapp.viewmoviedetails.repo.IFavoriteMovieRepo;
 import govender.kevashan.com.popularmoviesapp.viewmoviedetails.repo.ITrailerRepo;
 import govender.kevashan.com.popularmoviesapp.viewmoviedetails.task.MovieDetailsTaskFactory;
@@ -69,8 +70,8 @@ public class MovieDetailsViewModel implements IFavoriteMovie, ITrailer {
     }
 
     @Override
-    public void showTrailer(String key) {
-        view.showMovieTrailer(key);
+    public void showTrailer(GetTrailerResponse getTrailerResponse) {
+        view.showMovieTrailer(getTrailerResponse.getResults());
     }
 
     @Override

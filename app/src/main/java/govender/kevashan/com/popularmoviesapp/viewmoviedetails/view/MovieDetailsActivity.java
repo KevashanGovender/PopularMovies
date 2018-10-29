@@ -1,8 +1,6 @@
 package govender.kevashan.com.popularmoviesapp.viewmoviedetails.view;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +18,10 @@ import govender.kevashan.com.popularmoviesapp.R;
 import govender.kevashan.com.popularmoviesapp.database.MovieDatabase;
 import govender.kevashan.com.popularmoviesapp.serivce.MoviesService;
 import govender.kevashan.com.popularmoviesapp.serivce.RetrofitClientInstance;
-import govender.kevashan.com.popularmoviesapp.viewmoviedetails.ReviewAdapter;
+import govender.kevashan.com.popularmoviesapp.viewmoviedetails.adapter.ReviewAdapter;
+import govender.kevashan.com.popularmoviesapp.viewmoviedetails.adapter.TrailerAdapter;
 import govender.kevashan.com.popularmoviesapp.viewmoviedetails.models.Review;
+import govender.kevashan.com.popularmoviesapp.viewmoviedetails.models.Trailer;
 import govender.kevashan.com.popularmoviesapp.viewmoviedetails.repo.FavoriteMovieRepo;
 import govender.kevashan.com.popularmoviesapp.viewmoviedetails.repo.TrailerRepo;
 import govender.kevashan.com.popularmoviesapp.viewmoviedetails.viewmodel.MovieDetailsViewModel;
@@ -31,8 +31,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements IMovieDet
 
     private static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185//";
 
-    private TextView trailerBtn;
-    private RecyclerView recyclerView;
+    private RecyclerView reviewRV;
+    private RecyclerView trailerRV;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,8 +45,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements IMovieDet
         TextView movieRating = findViewById(R.id.rating_tv);
         TextView movieOverview = findViewById(R.id.overview_tv);
         ImageView favBtn = findViewById(R.id.fav_movie_btn);
-        trailerBtn = findViewById(R.id.trailer_btn);
-        recyclerView = findViewById(R.id.review_rv);
+        reviewRV = findViewById(R.id.review_rv);
+        trailerRV = findViewById(R.id.trailer_rv);
 
         Intent recievedIntent = getIntent();
         Movie recievedMovie = recievedIntent.getParcelableExtra("movie");
@@ -85,17 +85,23 @@ public class MovieDetailsActivity extends AppCompatActivity implements IMovieDet
     }
 
     @Override
-    public void showMovieTrailer(String key) {
-        trailerBtn.setOnClickListener(view -> {
-            Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + key));
-            Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("http://www.youtube.com/watch?v=" + key));
-            try {
-                startActivity(appIntent);
-            } catch (ActivityNotFoundException ex) {
-                startActivity(webIntent);
-            }
-        });
+    public void showMovieTrailer(List<Trailer> trailers) {
+//        trailerBtn.setOnClickListener(view -> {
+//            Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + key));
+//            Intent webIntent = new Intent(Intent.ACTION_VIEW,
+//                    Uri.parse("http://www.youtube.com/watch?v=" + key));
+//            try {
+//                startActivity(appIntent);
+//            } catch (ActivityNotFoundException ex) {
+//                startActivity(webIntent);
+//            }
+//        });
+
+        TrailerAdapter trailerAdapter = new TrailerAdapter(trailers, this);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        trailerRV.setLayoutManager(layoutManager);
+        trailerRV.setAdapter(trailerAdapter);
     }
 
     @Override
@@ -103,7 +109,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements IMovieDet
         ReviewAdapter adapter = new ReviewAdapter(reviews);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+        reviewRV.setLayoutManager(layoutManager);
+        reviewRV.setAdapter(adapter);
     }
 }
