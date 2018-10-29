@@ -1,11 +1,9 @@
 package govender.kevashan.com.popularmoviesapp.viewmovies.view;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +33,7 @@ public class ViewMoviesActivity extends AppCompatActivity implements IViewMovies
     private ViewMoviesViewModel viewMoviesViewModel;
     private FavoriteMoviesModel favoriteMoviesModel;
     private MoviesAdapter adapter;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +51,32 @@ public class ViewMoviesActivity extends AppCompatActivity implements IViewMovies
         viewMoviesViewModel = new ViewMoviesViewModel();
         viewMoviesViewModel.init(repo, key, this);
 
-        viewMoviesViewModel.getPopularMovies();
 
         favoriteMoviesModel = ViewModelProviders.of(this).get(FavoriteMoviesModel.class);
         favoriteMoviesModel.init(repo, key, this);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
+
+        sharedPreferences = getSharedPreferences("SortOrder", Context.MODE_PRIVATE);
+
+        switch (sharedPreferences.getString("sort_order", "")) {
+            case "popular":
+                viewMoviesViewModel.getPopularMovies();
+                break;
+            case "topRated":
+                viewMoviesViewModel.getTopRatedMovies();
+                break;
+            case "favorites":
+                favoriteMoviesModel.getFavoriteMovies();
+                break;
+            default:
+                Toast.makeText(this, "No sort order found", Toast.LENGTH_LONG).show();
+                break;
+        }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,12 +90,15 @@ public class ViewMoviesActivity extends AppCompatActivity implements IViewMovies
         switch (item.getItemId()) {
             case R.id.pop_movie:
                 viewMoviesViewModel.getPopularMovies();
+                sharedPreferences.edit().putString("sort_order", "popular").apply();
                 return true;
             case R.id.rated_movie:
                 viewMoviesViewModel.getTopRatedMovies();
+                sharedPreferences.edit().putString("sort_order", "topRated").apply();
                 return true;
             case R.id.favorites:
                 favoriteMoviesModel.getFavoriteMovies();
+                sharedPreferences.edit().putString("sort_order", "favorites").apply();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
