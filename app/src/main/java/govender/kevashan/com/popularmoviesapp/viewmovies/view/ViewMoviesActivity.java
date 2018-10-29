@@ -4,9 +4,11 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import govender.kevashan.com.popularmoviesapp.R;
@@ -34,10 +37,14 @@ public class ViewMoviesActivity extends AppCompatActivity implements IViewMovies
     private FavoriteMoviesModel favoriteMoviesModel;
     private MoviesAdapter adapter;
     private SharedPreferences sharedPreferences;
+    private List<Movie> movies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.e("DISPLAY MOVIES", "ON CREATE");
+
         setContentView(R.layout.activity_view_movies);
         recyclerView = findViewById(R.id.movies_rv);
         progressBar = findViewById(R.id.progressBar);
@@ -60,19 +67,24 @@ public class ViewMoviesActivity extends AppCompatActivity implements IViewMovies
 
         sharedPreferences = getSharedPreferences("SortOrder", Context.MODE_PRIVATE);
 
-        switch (sharedPreferences.getString("sort_order", "")) {
-            case "popular":
-                viewMoviesViewModel.getPopularMovies();
-                break;
-            case "topRated":
-                viewMoviesViewModel.getTopRatedMovies();
-                break;
-            case "favorites":
-                favoriteMoviesModel.getFavoriteMovies();
-                break;
-            default:
-                Toast.makeText(this, "No sort order found", Toast.LENGTH_LONG).show();
-                break;
+        if(savedInstanceState != null){
+            movies = savedInstanceState.getParcelableArrayList("movies");
+            showMovies(movies);
+        } else {
+            switch (sharedPreferences.getString("sort_order", "")) {
+                case "popular":
+                    viewMoviesViewModel.getPopularMovies();
+                    break;
+                case "topRated":
+                    viewMoviesViewModel.getTopRatedMovies();
+                    break;
+                case "favorites":
+                    favoriteMoviesModel.getFavoriteMovies();
+                    break;
+                default:
+                    Toast.makeText(this, "No sort order found", Toast.LENGTH_LONG).show();
+                    break;
+            }
         }
     }
 
@@ -118,6 +130,7 @@ public class ViewMoviesActivity extends AppCompatActivity implements IViewMovies
     @Override
     public void showMovies(List<Movie> movies) {
         adapter = new MoviesAdapter(movies, this);
+        this.movies = movies;
 
         recyclerView.setAdapter(adapter);
     }
@@ -145,4 +158,11 @@ public class ViewMoviesActivity extends AppCompatActivity implements IViewMovies
             recyclerView.setAdapter(adapter);
         });
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("movies", (ArrayList<? extends Parcelable>) movies);
+    }
+
 }
